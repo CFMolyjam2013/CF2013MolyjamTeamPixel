@@ -23,11 +23,12 @@ public class cureBuff : MonoBehaviour
 			if(playerPhysics.zombieStates == PlayerPhysics.ZombieState.fullHuman)
 			{
 				//Destroy item
+				Destroy(gameObject);
 			}
 			else
 			{
 				//Destroy item
-				
+				Destroy(gameObject);
 				//Change state
 				playerPhysics.zombieStates -= 1;
 			}
