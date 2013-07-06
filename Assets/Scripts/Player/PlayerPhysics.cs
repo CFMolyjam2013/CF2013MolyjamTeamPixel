@@ -11,7 +11,7 @@ public class PlayerPhysics : MonoBehaviour
     public float fullZombieSpeed = 60.0f;
 
     public float playerRotSpeed = 120.0f;
-
+    
     //gid sizes
     public int xGridSize = 4;
     public int yGridSize = 4;
@@ -25,7 +25,7 @@ public class PlayerPhysics : MonoBehaviour
 
     private float frameDur = 0.0f;
     private float nextTimeFrame = 0.0f;
-
+    
     //zombie levels
     public enum ZombieState
     {
@@ -37,16 +37,11 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     public ZombieState zombieStates { get; set; }
-
+    
     // Update is called once per frame
     void Update()
     {
-        //TEMPORARY JUST FOR TESTING.  WILL REPLACE WITH COLLIDING WITH THE AI'S
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            zombieStates++;
-        }
-
+        print(zombieStates);
         GetMotion();
     }
 
