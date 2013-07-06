@@ -15,13 +15,14 @@ public class bar : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
 	{
-		barLength = Screen.width /2;
+		barLength = Screen.width/4;
 		playerPhysics = GetComponent<PlayerPhysics>();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
+		
 		if(Input.GetKeyDown(KeyCode.A))
 		{
 			AddjustCurrentHunger(1);
@@ -30,37 +31,21 @@ public class bar : MonoBehaviour {
 		{
 			AddjustCurrentZombie(4);
 		}
-		if(Input.GetKey(KeyCode.S))
+		if(Input.GetMouseButton(1))
 		{
-			AddjustCurrentZombie(1);
-
+			AddjustCurrentZombie(1);		
 		}
 		if(Input.GetKeyDown(KeyCode.D))
 		{
 			AddjustCurrentBar(19);
 		}
 		
-//		if(playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullZombie)
-//		{
-//			//Healing (small amount)
-//			AddjustCurrentHunger(1/60);	
-//		}
-//		else
-//		{
-//			//Healing (large amount)
-//			AddjustCurrentZombie(5/60);	
-//		}
 	}
 	
-	void OnGUI () {
-		// Create one Group to contain both images
-		// Adjust the first 2 coordinates to place it somewhere else on-screen
-		GUI.BeginGroup (new Rect (30,30, barLength,32));
-	 
+	void OnGUI () 
+	{
 		// Draw the background image
-		GUI.Box (new Rect (0,0, barLength,32), barBg);
-	 
-	GUI.EndGroup ();
+		GUI.DrawTexture( new Rect(20,20, barLength,30), barBg, ScaleMode.StretchToFill); 
 	}
 	 
 	public void AddjustCurrentHunger(int adj)
@@ -82,7 +67,7 @@ public class bar : MonoBehaviour {
 			maxBar = 1;
 		}
 		
-		barLength = (Screen.width /2)* (curBar / (float)maxBar);
+		barLength = (Screen.width /4)* (curBar / (float)maxBar);
 	}
 	
 	public void AddjustCurrentZombie(int adj)
@@ -104,7 +89,7 @@ public class bar : MonoBehaviour {
 			maxBar = 1;
 		}
 		
-		barLength = (Screen.width /2)* (curBar / (float)maxBar);
+		barLength = (Screen.width /4)* (curBar / (float)maxBar);
 	}
 	public void AddjustCurrentBar(int adj)
 	{ 
@@ -125,6 +110,6 @@ public class bar : MonoBehaviour {
 			maxBar = 1;
 		}
 		
-		barLength = (Screen.width /2)* (curBar / (float)maxBar);
+		barLength = (Screen.width /4)* (curBar / (float)maxBar);
 	}
 }

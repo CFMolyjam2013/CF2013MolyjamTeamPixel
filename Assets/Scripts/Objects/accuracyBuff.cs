@@ -6,10 +6,27 @@ public class accuracyBuff : MonoBehaviour
 	public bool startPowerUp = false;
 	public float timer = 10;
 	
+	//frame times
+    private float frameDur = 0.0f;
+    private float nextTimeFrame = 0.0f;
+	
+	//gid sizes
+    public int xGridSize = 4;
+    public int yGridSize = 4;
+
+    private int frameDir = 0;
+    private int currentFrame = 0;
+
+    //position of the grid tiles
+    private float xGridPos = 0.0f;
+    private float yGridPos = 0.0f;
+	
+	private PlayerPhysics playerPhysics;
+	
 	// Use this for initialization
 	void Start () 
 	{
-	
+		playerPhysics = GetComponent<PlayerPhysics>();
 	}
 	
 	// Update is called once per frame
@@ -36,7 +53,14 @@ public class accuracyBuff : MonoBehaviour
 		//Give the player the ability to instant kill zombies
 		while(timer > 0 && startPowerUp == true)
 		{
-			
+			playerPhysics.pistolDamage = 100;
+			playerPhysics.shottyDamage = 100;
+		}
+		if(timer < 0 )
+		{
+			playerPhysics.pistolDamage = 20;
+			playerPhysics.shottyDamage = 10;
+			startPowerUp = false;
 		}
 	}
 }

@@ -16,29 +16,10 @@ public class rpgAmmo : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-
-	}	
-	
-	public void OnCollisionEnter(Collision other)
-	{
-		if(other.gameObject.tag == "player")
+		if(curRpgAmmo == 0)
 		{
-			if(curRpgAmmo < maxAmmo && curRpgAmmo > 2)
-			{
-				//Adding Ammo
-				curRpgAmmo = 3;
-				//Destroy Item
-				Destroy(gameObject);
-			}
-			else if(curRpgAmmo < maxAmmo && curRpgAmmo < 2)
-			{
-				curRpgAmmo += 1;
-				Destroy(gameObject);
-			}
-			else 
-			{
-				Destroy(gameObject);	
-			}
+			//Reset the player's rpg so they have to find it again
+			PlayerPhysics.hasRpg = false;
 		}
-	}
+	}	
 }
