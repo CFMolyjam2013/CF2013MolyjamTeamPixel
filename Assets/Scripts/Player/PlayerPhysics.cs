@@ -6,6 +6,7 @@ public class PlayerPhysics : MonoBehaviour
     public static bool hasRpg = false;
 
     public static float currentBulletSpeed = 0.0f;
+    public static int currDamage = 0;
 
     //speeds of player in zombie states
     public float fullHumanSpeed = 10.0f;
@@ -26,6 +27,11 @@ public class PlayerPhysics : MonoBehaviour
     public float shottyBulletSpeed = 0.5f;
     public float rpgRocketSpeed = 1.0f;
 
+    //bullet damage values
+    public int pistolDamage = 20;
+    public int rpgDamage = 100;
+    public int shottyDamage = 10;
+    
     //projectiles
     public Transform pistolBullet;
     public Transform shottyShell;
@@ -51,6 +57,13 @@ public class PlayerPhysics : MonoBehaviour
 
     private Transform currentProjectile;
 
+    private pistolAmmo pistolAmmoScript;
+    private shotgunAmmo shottyAmmoScript;
+    private rpgAmmo rpgAmmoScript;
+    private Targetting targeting;
+    
+    private float shottyDamageRangeMod = 0.0f;
+    
     public enum WeaponSelect
     {
         pistol,
@@ -73,17 +86,25 @@ public class PlayerPhysics : MonoBehaviour
 
     public ZombieState zombieStates { get; set; }
 
+    void Awake()
+    {
+        targeting = GetComponent<Targetting>();
+    }
+
     void Start()
     {
+        //set default weapon stats
+        currentProjectile = pistolBullet;
+        currentBulletSpeed = pistolBulletSpeed;
+        currDamage = pistolDamage;
         weaponSelected = WeaponSelect.pistol;
     }
     
     // Update is called once per frame
     void Update()
     {
-        print(SetFireRate());
-
         Aiming();
+        ShottyDamageRange();
         WeaponSelection();
         Firing();
         GetMotion();
@@ -108,6 +129,13 @@ public class PlayerPhysics : MonoBehaviour
         transform.rotation = rot;
     }
 
+    void ShottyDamageRange()
+    {
+        shottyDamageRangeMod = Mathf.Abs(targeting.shottyDist);
+        shottyDamageRangeMod = Mathf.Clamp(shottyDamageRangeMod, 0, 30);
+    }
+
+    //select weapons and set their values
     void WeaponSelection()
     {
         //pistol select
@@ -116,6 +144,7 @@ public class PlayerPhysics : MonoBehaviour
             weaponSelected = WeaponSelect.pistol;
             currentBulletSpeed = pistolBulletSpeed;
             currentProjectile = pistolBullet;
+            currDamage = pistolDamage;
         }
         //shotty select
         if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -123,6 +152,7 @@ public class PlayerPhysics : MonoBehaviour
             weaponSelected = WeaponSelect.shotty;
             currentBulletSpeed = shottyBulletSpeed;
             currentProjectile = shottyShell;
+            currDamage = (int)(shottyDamage * shottyDamageRangeMod);
         }
         //rpg select
         if (Input.GetKeyDown(KeyCode.Alpha3) && hasRpg)
@@ -162,7 +192,7 @@ public class PlayerPhysics : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && !IsInvoking("Fire"))
         {
-            InvokeRepeating("Fire", 0, SetFireRate());
+            Invoke("Fire", SetFireRate());
         }
         if (Input.GetMouseButtonUp(0))
         {

@@ -3,16 +3,21 @@ using System.Collections.Generic;
 
 public class Targetting : MonoBehaviour
 {
-    public List<Transform> allHumans;
+    public List<Transform> allTargets;
 
     public Transform currentTarget;
 
     public float munchDuration = 1.0f;
+
     public float range = 3.0f;
-    
+    public float shottyRange = 20.0f;
+    [HideInInspector]
+    public float shottyDist = 0.0f;
+
     private PlayerPhysics playerPhysics;
 
     private float munchDur = 0.0f;
+
     private float curDist;
 
     void Awake()
@@ -23,11 +28,11 @@ public class Targetting : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        allHumans = new List<Transform>();
+        allTargets = new List<Transform>();
 
         currentTarget = null;
 
-        AddAllHumans();
+        AddAllZombies();
     }
 
     public void AddAllHumans()
@@ -40,9 +45,19 @@ public class Targetting : MonoBehaviour
         }
     }
 
+    public void AddAllZombies()
+    {
+        GameObject[] go = GameObject.FindGameObjectsWithTag("Zombie");
+
+        foreach (GameObject target in go)
+        {
+            AddTarget(target.transform);
+        }
+    }
+
     void AddTarget(Transform target)
     {
-        allHumans.Add(target);
+        allTargets.Add(target);
     }
 
 	// Update is called once per frame
@@ -51,6 +66,12 @@ public class Targetting : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.T) && playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullZombie)
         {
             playerPhysics.zombieStates++;
+
+            if (playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullHuman)
+            {
+                allTargets.Clear();
+                AddAllHumans();
+            }
         }
         MunchControl();
 	}
@@ -59,11 +80,16 @@ public class Targetting : MonoBehaviour
     {
         curDist = range;
 
-        foreach (Transform target in allHumans)
+        foreach (Transform target in allTargets)
         {
-            if (allHumans.Count > 0)
+            if (allTargets.Count > 0)
             {
                 float dist = Vector3.Distance(target.position, transform.position);
+
+                if (dist < shottyRange)
+                {
+                    shottyDist = (shottyDist / dist) + shottyRange;
+                }
 
                 if (dist < curDist)
                 {
@@ -73,8 +99,6 @@ public class Targetting : MonoBehaviour
                     {
                         munchDur -= Time.deltaTime;
                     }
-
-                    target.renderer.material.color = Color.red;
                 }
             }
         }
@@ -83,6 +107,12 @@ public class Targetting : MonoBehaviour
         {
             playerPhysics.zombieStates--;
             munchDur = munchDuration;
+        }
+
+        if (playerPhysics.zombieStates == PlayerPhysics.ZombieState.fullHuman)
+        {
+            allTargets.Clear();
+            AddAllZombies();
         }
     }
 }
