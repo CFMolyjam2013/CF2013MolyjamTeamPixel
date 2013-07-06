@@ -1,11 +1,16 @@
 using UnityEngine;
 using System.Collections;
 
-public class foodObject : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
+public class foodObject : MonoBehaviour 
+{
+	private PlayerPhysics playerPhysics;
+	private bar bar;
 	
+	// Use this for initialization
+	void Start () 
+	{
+		playerPhysics = GetComponent<PlayerPhysics>();
+		bar = GetComponent<bar>();
 	}
 	
 	// Update is called once per frame
@@ -18,7 +23,14 @@ public class foodObject : MonoBehaviour {
 	{
 		if(other.gameObject.tag == "player")
 		{
-			//Modify bar so to take away hunger
+			if(bar.curBar != bar.maxBar)
+			{
+				
+			}
+			else
+			{
+				
+			}
 		}
 	}
 }
