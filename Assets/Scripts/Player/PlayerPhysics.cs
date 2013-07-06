@@ -11,7 +11,7 @@ public class PlayerPhysics : MonoBehaviour
     public float fullZombieSpeed = 60.0f;
 
     public float playerRotSpeed = 120.0f;
-    
+
     //gid sizes
     public int xGridSize = 4;
     public int yGridSize = 4;
@@ -25,7 +25,10 @@ public class PlayerPhysics : MonoBehaviour
 
     private float frameDur = 0.0f;
     private float nextTimeFrame = 0.0f;
-    
+
+    private float angle = 0.0f;
+    private float counterActAngle = 90.0f;
+
     //zombie levels
     public enum ZombieState
     {
@@ -42,7 +45,34 @@ public class PlayerPhysics : MonoBehaviour
     void Update()
     {
         print(zombieStates);
+
+        Aiming();
+        Firing();
         GetMotion();
+    }
+
+    void Aiming()
+    {
+        Vector3 mousePos = Input.mousePosition;
+
+        Vector3 objPos = Camera.main.WorldToScreenPoint(transform.position);
+
+        //get relative position from mouse position and player
+        mousePos.x = mousePos.x - objPos.x;
+        mousePos.y = mousePos.y - objPos.y;
+
+        //get angle
+        angle = Mathf.Atan2(mousePos.y, mousePos.x) * Mathf.Rad2Deg;
+
+        //get rotation
+        Quaternion rot = Quaternion.Euler(new Vector3(0, -angle + counterActAngle, 0));
+        //apply rotation
+        transform.rotation = rot;
+    }
+
+    void Firing()
+    {
+
     }
 
     void GetMotion()

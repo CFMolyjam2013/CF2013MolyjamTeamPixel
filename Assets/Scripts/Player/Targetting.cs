@@ -8,12 +8,12 @@ public class Targetting : MonoBehaviour
     public Transform currentTarget;
 
     public float munchDuration = 1.0f;
-
+    public float range = 3.0f;
+    
     private PlayerPhysics playerPhysics;
 
-    public float munchDur = 0.0f;
-    public float curDist;
-    public float range = 3.0f;
+    private float munchDur = 0.0f;
+    private float curDist;
 
     void Awake()
     {
@@ -45,15 +45,6 @@ public class Targetting : MonoBehaviour
         allHumans.Add(target);
     }
 
-    //private void SortByDist()
-    //{
-    //    allHumans.Sort(delegate(Transform t1, Transform t2)
-    //    {
-    //        return Vector3.Distance(t1.position, transform.position).CompareTo(
-    //            Vector3.Distance(t2.position, transform.position));
-    //    });
-    //}
-
 	// Update is called once per frame
 	void Update ()
     {
@@ -77,14 +68,13 @@ public class Targetting : MonoBehaviour
                 if (dist < curDist)
                 {
                     curDist = dist;
-                    currentTarget = target;
 
-                    munchDur -= Time.deltaTime;
+                    if (Input.GetMouseButton(1))
+                    {
+                        munchDur -= Time.deltaTime;
+                    }
+
                     target.renderer.material.color = Color.red;
-                }
-                else
-                {
-                    target.renderer.material.color = Color.blue;
                 }
             }
         }
