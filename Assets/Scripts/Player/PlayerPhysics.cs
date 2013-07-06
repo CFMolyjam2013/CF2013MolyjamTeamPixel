@@ -3,6 +3,10 @@ using System.Collections;
 
 public class PlayerPhysics : MonoBehaviour
 {
+    public static bool hasRpg = false;
+
+    public static float currentBulletSpeed = 0.0f;
+
     //speeds of player in zombie states
     public float fullHumanSpeed = 10.0f;
     public float partHumanSpeed = 20.0f;
@@ -11,6 +15,21 @@ public class PlayerPhysics : MonoBehaviour
     public float fullZombieSpeed = 60.0f;
 
     public float playerRotSpeed = 120.0f;
+
+    //weapon fire rates
+    public float pistolFireRate = 0.5f;
+    public float shottyFireRate = 1.5f;
+    public float rpgFireRate = 2.5f;
+
+    //bullet speeds
+    public float pistolBulletSpeed = 1.0f;
+    public float shottyBulletSpeed = 0.5f;
+    public float rpgRocketSpeed = 1.0f;
+
+    //projectiles
+    public Transform pistolBullet;
+    public Transform shottyShell;
+    public Transform rpgChainsawRocket;
 
     //gid sizes
     public int xGridSize = 4;
@@ -23,11 +42,24 @@ public class PlayerPhysics : MonoBehaviour
     private float xGridPos = 0.0f;
     private float yGridPos = 0.0f;
 
+    //frame times
     private float frameDur = 0.0f;
     private float nextTimeFrame = 0.0f;
 
     private float angle = 0.0f;
     private float counterActAngle = 90.0f;
+
+    private Transform currentProjectile;
+
+    public enum WeaponSelect
+    {
+        pistol,
+        shotty,
+        rpgChainsaw,
+        melee
+    }
+
+    public WeaponSelect weaponSelected { get; set; }
 
     //zombie levels
     public enum ZombieState
@@ -40,13 +72,19 @@ public class PlayerPhysics : MonoBehaviour
     }
 
     public ZombieState zombieStates { get; set; }
+
+    void Start()
+    {
+        weaponSelected = WeaponSelect.pistol;
+    }
     
     // Update is called once per frame
     void Update()
     {
-        print(zombieStates);
+        print(SetFireRate());
 
         Aiming();
+        WeaponSelection();
         Firing();
         GetMotion();
     }
@@ -70,9 +108,71 @@ public class PlayerPhysics : MonoBehaviour
         transform.rotation = rot;
     }
 
+    void WeaponSelection()
+    {
+        //pistol select
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            weaponSelected = WeaponSelect.pistol;
+            currentBulletSpeed = pistolBulletSpeed;
+            currentProjectile = pistolBullet;
+        }
+        //shotty select
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            weaponSelected = WeaponSelect.shotty;
+            currentBulletSpeed = shottyBulletSpeed;
+            currentProjectile = shottyShell;
+        }
+        //rpg select
+        if (Input.GetKeyDown(KeyCode.Alpha3) && hasRpg)
+        {
+            weaponSelected = WeaponSelect.rpgChainsaw;
+            currentBulletSpeed = rpgRocketSpeed;
+            currentProjectile = rpgChainsawRocket;
+        }
+        //melee select
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            weaponSelected = WeaponSelect.melee;
+        }
+    }
+
+    float SetFireRate()
+    {
+        float fireRate = 0.0f;
+
+        switch (weaponSelected)
+        {
+            case WeaponSelect.pistol:
+                fireRate = pistolFireRate;
+                break;
+            case WeaponSelect.shotty:
+                fireRate = shottyFireRate;
+                break;
+            case WeaponSelect.rpgChainsaw:
+                fireRate = rpgFireRate;
+                break;
+        }
+
+        return fireRate;
+    }
+
     void Firing()
     {
+        if (Input.GetMouseButton(0) && !IsInvoking("Fire"))
+        {
+            InvokeRepeating("Fire", 0, SetFireRate());
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            CancelInvoke("Fire");
+        }
+    }
 
+    void Fire()
+    {
+        Instantiate(currentProjectile, transform.position, transform.rotation);
     }
 
     void GetMotion()
