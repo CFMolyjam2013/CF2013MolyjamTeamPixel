@@ -8,8 +8,6 @@ public class bar : MonoBehaviour {
 	public int curBar = 20;
  
 	public Texture2D barBg;
-	public Texture2D barFg;
- 
 	public float barLength;
 	
 	private PlayerPhysics playerPhysics;
@@ -24,41 +22,50 @@ public class bar : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		if(playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullZombie)
+		if(Input.GetKeyDown(KeyCode.A))
 		{
-			//Hunger decrement
-			AddjustCurrentHunger(1/60);	
+			AddjustCurrentHunger(1);
 		}
-		else
+		if(Input.GetKeyDown(KeyCode.B))
 		{
-			AddjustCurrentZombie(5/60);	
+			AddjustCurrentZombie(4);
 		}
+		if(Input.GetKey(KeyCode.S))
+		{
+			AddjustCurrentZombie(1);
+
+		}
+		if(Input.GetKeyDown(KeyCode.D))
+		{
+			AddjustCurrentBar(19);
+		}
+		
+//		if(playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullZombie)
+//		{
+//			//Healing (small amount)
+//			AddjustCurrentHunger(1/60);	
+//		}
+//		else
+//		{
+//			//Healing (large amount)
+//			AddjustCurrentZombie(5/60);	
+//		}
 	}
 	
 	void OnGUI () {
 		// Create one Group to contain both images
 		// Adjust the first 2 coordinates to place it somewhere else on-screen
-		GUI.BeginGroup (new Rect (0,0, barLength,32));
+		GUI.BeginGroup (new Rect (30,30, barLength,32));
 	 
 		// Draw the background image
 		GUI.Box (new Rect (0,0, barLength,32), barBg);
-	 
-		// Create a second Group which will be clipped
-		// We want to clip the image and not scale it, which is why we need the second Group
-		GUI.BeginGroup (new Rect (0,0, curBar / maxBar * barLength, 32));
-	 
-			// Draw the foreground image
-			GUI.Box (new Rect (0,0,barLength,32), barFg);
-	 
-		// End both Groups
-		GUI.EndGroup ();
 	 
 	GUI.EndGroup ();
 	}
 	 
 	public void AddjustCurrentHunger(int adj)
 	{ 
-		curBar -= adj;
+		curBar += adj;
 		
 		if(curBar <0)
 		{
@@ -79,6 +86,27 @@ public class bar : MonoBehaviour {
 	}
 	
 	public void AddjustCurrentZombie(int adj)
+	{ 
+		curBar += adj;
+		
+		if(curBar <0)
+		{
+			curBar = 0;	
+		}
+		
+		if(curBar > maxBar)
+		{
+			curBar = maxBar;	
+		}
+		
+		if(maxBar <1)
+		{
+			maxBar = 1;
+		}
+		
+		barLength = (Screen.width /2)* (curBar / (float)maxBar);
+	}
+	public void AddjustCurrentBar(int adj)
 	{ 
 		curBar -= adj;
 		

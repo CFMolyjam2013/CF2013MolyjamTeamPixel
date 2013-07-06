@@ -6,7 +6,7 @@ public class rpgWeapon : MonoBehaviour {
 	public bool haveRpg = false;
 	public int goalKillCount = 20;
 	private PlayerPhysics playerPhysics;
-	
+
 	// Use this for initialization
 	void Start () 
 	{
@@ -28,7 +28,7 @@ public class rpgWeapon : MonoBehaviour {
 		if(other.gameObject.tag == "player")
 		{
 			//Enable player to select the weapon to use
-			//playerPhysics.hasRpg = true;
+			PlayerPhysics.hasRpg = true;
 			//Make sure the weapon does not spawn again
 			haveRpg = true;
 			//Destroy object
