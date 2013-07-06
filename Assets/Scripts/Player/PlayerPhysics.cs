@@ -27,6 +27,8 @@ public class PlayerPhysics : MonoBehaviour
     public float shottyBulletSpeed = 0.5f;
     public float rpgRocketSpeed = 1.0f;
 
+    public float health = 100;
+
     //bullet damage values
     public int pistolDamage = 20;
     public int rpgDamage = 100;
@@ -93,6 +95,8 @@ public class PlayerPhysics : MonoBehaviour
 
     void Start()
     {
+        zombieStates = ZombieState.fullHuman;
+
         //set default weapon stats
         currentProjectile = pistolBullet;
         currentBulletSpeed = pistolBulletSpeed;
@@ -246,6 +250,8 @@ public class PlayerPhysics : MonoBehaviour
         transform.rotation = rot;
         //move forward
         transform.position += transform.forward * vInput * MoveSpeed() * Time.deltaTime;
+
+        print(zombieStates);
     }
 
     //set speed according to zombie state
@@ -273,5 +279,28 @@ public class PlayerPhysics : MonoBehaviour
         }
 
         return moveSpeed;
+    }
+
+    public void HealthControl(int dmg)
+    {
+        health += dmg;
+
+        if (health <= 0)
+        {
+            zombieStates++;
+
+            Targetting.instance.allTargets.Clear();
+
+            if (zombieStates != ZombieState.fullHuman)
+            {
+                Targetting.instance.AddAllHumans();
+            }
+            else
+            {
+                Targetting.instance.AddAllZombies();
+            }
+
+            health = 100;
+        }
     }
 }

@@ -3,9 +3,14 @@ using System.Collections.Generic;
 
 public class Targetting : MonoBehaviour
 {
+    public static Targetting instance;
+
     public List<Transform> allTargets;
 
     public Transform currentTarget;
+
+    //[HideInInspector]
+    public bool hasTurned = false;
 
     public float munchDuration = 1.0f;
 
@@ -13,6 +18,8 @@ public class Targetting : MonoBehaviour
     public float shottyRange = 20.0f;
     [HideInInspector]
     public float shottyDist = 0.0f;
+    [HideInInspector]
+    public bool hasTurnedBack = false;
 
     private PlayerPhysics playerPhysics;
 
@@ -22,12 +29,16 @@ public class Targetting : MonoBehaviour
 
     void Awake()
     {
+        instance = this;
+
         playerPhysics = GetComponent<PlayerPhysics>();
     }
 
     // Use this for initialization
     void Start()
     {
+        munchDur = munchDuration;
+
         allTargets = new List<Transform>();
 
         currentTarget = null;
@@ -63,16 +74,6 @@ public class Targetting : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        if (Input.GetKeyDown(KeyCode.T) && playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullZombie)
-        {
-            playerPhysics.zombieStates++;
-
-            if (playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullHuman)
-            {
-                allTargets.Clear();
-                AddAllHumans();
-            }
-        }
         MunchControl();
 	}
 
@@ -86,16 +87,18 @@ public class Targetting : MonoBehaviour
             {
                 float dist = Vector3.Distance(target.position, transform.position);
 
+                //calculate range for shotgun strength
                 if (dist < shottyRange)
                 {
                     shottyDist = (shottyDist / dist) + shottyRange;
                 }
 
+                //calculate distance to other targets
                 if (dist < curDist)
                 {
                     curDist = dist;
 
-                    if (Input.GetMouseButton(1))
+                    if (Input.GetMouseButton(1) && playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullHuman)
                     {
                         munchDur -= Time.deltaTime;
                     }
@@ -103,16 +106,18 @@ public class Targetting : MonoBehaviour
             }
         }
 
-        if (munchDur <= 0 && playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullHuman)
+        if (munchDur <= 0)
         {
             playerPhysics.zombieStates--;
             munchDur = munchDuration;
         }
 
-        if (playerPhysics.zombieStates == PlayerPhysics.ZombieState.fullHuman)
-        {
-            allTargets.Clear();
-            AddAllZombies();
-        }
+        //if (playerPhysics.zombieStates == PlayerPhysics.ZombieState.fullHuman && !hasTurnedBack)
+        //{
+        //    allTargets.Clear();
+        //    AddAllZombies();
+
+        //    hasTurnedBack = true;
+        //}
     }
 }
