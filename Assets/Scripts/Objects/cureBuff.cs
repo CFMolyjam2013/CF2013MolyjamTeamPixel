@@ -15,7 +15,7 @@ public class cureBuff : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//OnCollisionEnter(Collision);
+		
 	}
 		
 	public void OnCollisionEnter(Collision other)
@@ -32,7 +32,7 @@ public class cureBuff : MonoBehaviour
 				//Change state
 				playerPhysics.zombieStates -= 1;
 				//Modify the bar to fill up
-				bar.AddjustCurrentZombie();
+				bar.AddjustCurrentZombie(5/60);
 				//Destroy item
 				Destroy(gameObject);
 			}

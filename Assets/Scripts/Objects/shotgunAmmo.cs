@@ -4,7 +4,7 @@ using System.Collections;
 public class shotgunAmmo : MonoBehaviour 
 {
 	//Starting ammo
-	int ammo = 0;
+	public int curShotgunAmmo = 0;
 	int maxAmmo = 10;
 	
 	// Use this for initialization
@@ -16,24 +16,23 @@ public class shotgunAmmo : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//Adding ammo
-		//OnCollisionEnter(Collision);
+		
 	}	
 	
 	public void OnCollisionEnter(Collision other)
 	{
 		if(other.gameObject.tag == "player")
 		{
-			if(ammo < maxAmmo && ammo > 5)
+			if(curShotgunAmmo < maxAmmo && curShotgunAmmo > 5)
 			{
 				//Adding Ammo
-				ammo = 10;
+				curShotgunAmmo = 10;
 				//Destroy Item
 				Destroy(gameObject);
 			}
-			else if(ammo < maxAmmo && ammo < 5)
+			else if(curShotgunAmmo < maxAmmo && curShotgunAmmo < 5)
 			{
-				ammo += 5;
+				curShotgunAmmo += 5;
 				Destroy(gameObject);
 			}
 			else 

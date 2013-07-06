@@ -16,7 +16,7 @@ public class foodObject : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		//OnCollisionEnter(Collision);
+		
 	}
 	
 	public void OnCollisionEnter(Collision other)
@@ -25,11 +25,14 @@ public class foodObject : MonoBehaviour
 		{
 			if(bar.curBar != bar.maxBar)
 			{
-				
+				//Fills bar back up
+				bar.AddjustCurrentHunger(1/60);
+				//Destroys object
+				Destroy(gameObject);
 			}
 			else
 			{
-				
+				Destroy(gameObject);
 			}
 		}
 	}
