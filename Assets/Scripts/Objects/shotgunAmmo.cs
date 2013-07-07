@@ -4,7 +4,7 @@ using System.Collections;
 public class shotgunAmmo : MonoBehaviour 
 {
 	//Starting ammo
-	public int curShotgunAmmo = 0;
+	public static int curShotgunAmmo = 0;
 	int maxAmmo = 10;
 	
 	// Use this for initialization

@@ -4,7 +4,7 @@ using System.Collections;
 public class rpgAmmo : MonoBehaviour 
 {
 	//Starting ammo
-	public int curRpgAmmo = 0;
+	public static int curRpgAmmo = 0;
 	int maxAmmo = 3;
 	
 	// Use this for initialization
