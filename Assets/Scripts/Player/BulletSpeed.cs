@@ -20,8 +20,6 @@ public class BulletSpeed : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        print(damage);
-
         Speed();
         Kill();
 	}

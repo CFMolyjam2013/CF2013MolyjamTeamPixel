@@ -14,11 +14,10 @@ public class HumanAICiviController : MonoBehaviour
     public int randomRot = 1;
 
     public float moveSpeed = 0.0f;
-    
+    public float timer = 0.0f;
+
     private GameObject player;
     private PlayerPhysics playerPhysics;
-
-    private bool isMoving = true;
 
     private Quaternion rot;
 
@@ -39,6 +38,7 @@ public class HumanAICiviController : MonoBehaviour
 
     void Start()
     {
+        timer = 2;
         moveSpeed = calmMoveSpeed;
     }
 
@@ -57,17 +57,27 @@ public class HumanAICiviController : MonoBehaviour
 
         if (playerPhysics.zombieStates != PlayerPhysics.ZombieState.fullHuman && dist < maxFleeRange)
         {
-            CancelInvoke("RandomizeRotation");
-
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(-targetDir), rotateSpeed);
         }
         else
         {
-            if (!IsInvoking("RandomizeRotation") && isMoving)
+            if (timer == 2)
             {
-                Invoke("RandomizeRotation", 2);
-                StartCoroutine("WaitAndGo", 2);
-            }           
+                RandomizeRotation();
+            }
+            if (timer > 0)
+            {
+                timer -= Time.deltaTime;
+            }
+            if (timer <= 0)
+            {
+                moveStates = MoveState.calm;
+
+                if (!IsInvoking("WaitAndResetTimer"))
+                {
+                    Invoke("WaitAndResetTimer", 2);
+                }
+            }
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rot, rotateSpeed * Time.deltaTime);
         }
         transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
@@ -93,17 +103,12 @@ public class HumanAICiviController : MonoBehaviour
     void RandomizeRotation()
     {
         moveStates = MoveState.stopped;
-        randomRot = Random.Range(-10, 60);
+        randomRot = Random.Range(-40, 40);
         rot = Quaternion.AngleAxis(randomRot, Vector3.up) * transform.rotation;
     }
 
-    IEnumerator WaitAndGo(float waitTime)
+    void WaitAndResetTimer()
     {
-        isMoving = false;
-
-        yield return new WaitForSeconds(waitTime);
-
-        moveStates = MoveState.calm;
-        isMoving = true;
+        timer = 2;
     }
 }

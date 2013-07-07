@@ -81,5 +81,10 @@ public class ZombieAIController : MonoBehaviour
     public void HealthControl(int adj)
     {
         curHealth += adj;
+
+        if (curHealth <= 0)
+        {
+            PlayerPhysics.killCount++;
+        }
     }
 }

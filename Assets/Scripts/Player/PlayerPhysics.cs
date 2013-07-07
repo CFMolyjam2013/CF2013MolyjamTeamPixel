@@ -7,6 +7,7 @@ public class PlayerPhysics : MonoBehaviour
 
     public static float currentBulletSpeed = 0.0f;
     public static int currDamage = 0;
+    public static int killCount = 0;
 
     //speeds of player in zombie states
     public float fullHumanSpeed = 10.0f;
@@ -43,7 +44,6 @@ public class PlayerPhysics : MonoBehaviour
     public int xGridSize = 4;
     public int yGridSize = 4;
 
-    private int frameDir = 0;
     private int currentFrame = 0;
 
     //position of the grid tiles
@@ -206,6 +206,11 @@ public class PlayerPhysics : MonoBehaviour
 
     void Fire()
     {
+        //switch (weaponSelected)
+        //{
+        //    case WeaponSelect.pistol:
+
+        //}
         Instantiate(currentProjectile, transform.position, transform.rotation);
     }
 
@@ -250,8 +255,6 @@ public class PlayerPhysics : MonoBehaviour
         transform.rotation = rot;
         //move forward
         transform.position += transform.forward * vInput * MoveSpeed() * Time.deltaTime;
-
-        print(zombieStates);
     }
 
     //set speed according to zombie state

@@ -109,15 +109,8 @@ public class Targetting : MonoBehaviour
         if (munchDur <= 0)
         {
             playerPhysics.zombieStates--;
+            PlayerPhysics.killCount++;
             munchDur = munchDuration;
         }
-
-        //if (playerPhysics.zombieStates == PlayerPhysics.ZombieState.fullHuman && !hasTurnedBack)
-        //{
-        //    allTargets.Clear();
-        //    AddAllZombies();
-
-        //    hasTurnedBack = true;
-        //}
     }
 }
